@@ -1,0 +1,78 @@
+<div class="header-wrapper">
+<header class="site-header" role="banner" data-section-id="{{ section.id }}" data-section-type="header-section">
+  <div class="wrapper">
+    <div class="grid--header2">       
+      <div class="grid-20"> 
+      {% if template.name == 'index' %}
+      <h1 class="header-logo" itemscope itemtype="http://schema.org/Organization">
+        {% else %}
+        <div class="h1 header-logo" itemscope itemtype="http://schema.org/Organization">
+          {% endif %}
+          {% if section.settings.logo %}
+           {% capture image_size %}{{ section.settings.logo_max_width | escape }}x{% endcapture %}
+          <a href="/" itemprop="url">
+            <img src="{{ section.settings.logo | img_url: image_size }}"
+                 srcset="{{ section.settings.logo | img_url: image_size }} 1x, {{ section.settings.logo | img_url: image_size, scale: 2 }} 2x"
+                 alt="{{ section.settings.logo.alt | default: shop.name }}"
+                 itemprop="logo">
+          </a>
+          {% else %}
+          <a href="/" itemprop="url">{{ shop.name }}</a>
+          {% endif %}
+          {% if template.name == 'index' %}
+          </h1>
+        {% else %}
+        </div>
+      {% endif %}
+        </div>
+      <div class="grid-60 grid-center">
+      <div class="grid-item text-center large--text-right">
+      <nav class="nav-bar" role="navigation">
+        <div class="wrapper">
+        
+          {% if section.settings.search_actived %}
+
+          {% else %}
+          <div class="no-pc">{% include 'search-bar' %} </div>
+          
+
+          {% endif %}
+           
+          {% include 'site-nav' %}
+          
+        </div>
+      </nav>
+      
+    </div> </div>
+      
+      <div class="grid-20"> 
+        <div class="no-mobile">
+
+          <a href="/cart" class="header-cart-btn">
+            <i class="fa fa-shopping-cart"></i>
+            <span class="cart-count cart-badge--desktop {% if cart.item_count == 0 %}hidden-count{% endif %}">{{ cart.item_count }}</span>
+          </a>
+          {% include 'mini-cart' %}
+          {% if shop.customer_accounts_enabled %}
+          <span class="site-header--meta-links medium-down--hide boxconnexion-show-{{ section.settings.header_box_actived }}">
+           <a href="/account"><i class="fa fa-user" aria-hidden="true"></i></a>
+          </span>
+          
+          {% endif %}
+          
+        
+        
+          {% if section.settings.search_actived %}
+
+          {% else %}
+          {% include 'search-bar' %}
+
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    </header>
+
+  {% include 'mobile-navbar' %}
+  
+  </div>

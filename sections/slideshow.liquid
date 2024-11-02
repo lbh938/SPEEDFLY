@@ -1,0 +1,340 @@
+<hr>
+<div class="flexslider" id="heroSlider--{{ section.id }}" data-section-id="{{ section.id }}" data-section-type="slideshow-section" data-slider-home-auto="{{ section.settings.slider_home_auto }}" data-slider-home-rate="{{ section.settings.slider_home_rate }}">
+  
+  <ul class="slides">
+    {% for block in section.blocks %}
+    <li id="slide--{{ block.id }}" data-flexslider-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+
+      {% if block.settings.slide != blank %} 
+
+      {% if section.settings.slider_home_linkimg %} <a href="{{ block.settings.link }}">  {% endif %}
+      <img src="{{ block.settings.slide | img_url: '1920x' }}"
+           srcset="{{ block.settings.slide | img_url: '1920x' }} 1x, {{ block.settings.slide | img_url: '1920x', scale: 2 }} 1x" alt="{{ block.settings.slide.alt }}">
+      {% if section.settings.slider_home_linkimg %} </a>  {% endif %}
+          
+          {% if block.settings.link != "" %}
+         
+          <div class="slideshow-show-{{ block.settings.slider_text_enable }} slideshow-wrapper-{{ block.settings.slider_position }}">
+          <div class="slideshow__text-wrap effect-{{ block.settings.slider_overlay_effects }} {% if block.settings.title != blank or block.settings.subheading != blank or block.settings.link != blank %} slideshow__overlay{% endif %}">
+              <div class="slideshow__text-content">
+                <div class="page-width">
+                  {% unless block.settings.title == blank %}
+                    <h2 class="h1 mega-title slideshow__title{% if settings.link != blank %} slideshow__title--has-link{% endif %}{% if section.settings.text_size == 'large' %} mega-title--large{% endif %}">
+                      <span>{{ block.settings.title | escape }}</span>
+                    </h2>
+                  {% endunless %}
+                  {% unless block.settings.subheading == blank %}
+                    <div  class="slideshow-text"><p class="mega-subtitle slideshow__subtitle{% if section.settings.text_size == 'large' %} mega-subtitle--large{% endif %}">
+                      <span>{{ block.settings.subheading | escape }}</span>
+                      </p></div>
+                  {% endunless %}
+                  {% if block.settings.link %}
+                  {% if block.settings.title == blank or block.settings.subheading == blank %}
+                  <br /><br />
+                  {% endif %}
+                  {% if section.settings.slider_home_linksup %}
+                  <div>                    
+                    <a href="{{ block.settings.link }}" class="slide-link btn-effect-{{ section.settings.slider_btn_effect }}">
+                      {{ block.settings.linktext | escape }}               
+                    </a>
+                  </div>
+                  {% endif %}
+                  {% endif %}
+                  {% if block.type == 'video' %}
+                    {% unless block.settings.video_type == 'background' %}
+                      <div class="slideshow__video-control--play-wrapper{% if block.settings.title != blank or block.settings.subheading != blank %} slideshow__video-control--play-wrapper--push{% endif %}">
+                        <button type="button" class="text-link slideshow__video-control slideshow__video-control--play" data-controls="SlideshowVideo-{{ block.id }}">
+                          {% include 'icon-play-video' %}
+                          <span class="icon__fallback-text">{{ 'sections.slideshow.play_video' | t }}</span>
+                        </button>
+                      </div>
+                    {% endunless %}
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+
+          {% else %}
+          
+               <img src="//via.placeholder.com/1900x1000" />
+          {% endif %}
+        </li>
+    {% endfor %}
+  </ul>
+  {% if section.settings.slider_home_scroll %}  
+  <a href="#main-content" class="movearrow">
+    <span class="icon-scroll">
+      <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="35px" height="28px" viewBox="0 0 52 28" enable-background="new 0 0 52 28" xml:space="preserve">
+        <polyline fill="none" stroke="#2e3438" stroke-width="4" stroke-miterlimit="10" points="50.038,2.546 25.928,24.541 1.816,2.546"></polyline>
+      </svg>
+    </span>
+  </a>
+  {% endif %}
+</div>
+
+<style type="text/css">
+  @media screen and (min-width: 1024px) {
+    #heroSlider--{{ section.id }} .slideshow__overlay h2 {    
+      font-size: {{ section.settings.slider_title_size}}px;   
+    }
+     #heroSlider--{{ section.id }} .slideshow__overlay p {    
+      font-size: {{ section.settings.slider_text_size}}px;   
+    }
+     #heroSlider--{{ section.id }} .slideshow__overlay .slide-link {    
+      font-size: {{ section.settings.slider_btn_size}}px;   
+    }
+  }
+</style>
+<script>
+  jQuery(document).ready(function() {
+    if (jQuery('.slideshow__overlay p').css('background-color') != 'rgba(0, 0, 0, 0)'){
+      jQuery('.slideshow__overlay p').addClass('padding');
+    }
+    if (jQuery('.slideshow__overlay h2').css('background-color') != 'rgba(0, 0, 0, 0)'){
+      jQuery('.slideshow__overlay h2').addClass('padding');
+    }
+  });
+</script>
+
+{% schema %}
+  {
+    "name": "Carrousel",
+    "class": "slider-section",
+    "max_blocks": 8,
+    "settings": [       
+      {
+        "type": "checkbox",
+        "id": "slider_home_auto",
+        "label": "Rotation automatique"
+      },
+      {
+        "type": "checkbox",
+        "id": "slider_home_scroll",
+        "label": "Activer flèche de scroll",
+        "info": "Seulement sur la version Deluxe"
+      },
+      {
+        "type": "checkbox",
+        "id": "slider_home_linkimg",
+        "label": "Activer le lien sur l'image",
+		"default": true
+       
+      },
+      {
+        "type": "checkbox",
+        "id": "slider_home_linksup",
+        "label": "Activer le bouton",
+        "default": true
+        
+      },
+      {
+        "type": "select",
+        "id": "slider_home_rate",
+        "label": "Temps de transition",
+        "options": [
+          
+          {
+            "value": "5000",
+            "label": "5 seconds"
+          },
+          {
+            "value": "7000",
+            "label": "7 seconds"
+          },
+          {
+            "value": "10000",
+            "label": "10 seconds"
+          },
+          {
+            "value": "15000",
+            "label": "15 seconds"
+          }
+        ]
+      },
+      {
+        "type":      "range",
+        "id":        "slider_title_size",
+        "min":       20,
+        "max":        70,       
+        "unit":       "px",
+        "label":     "Taille du titre",
+        "default":   38
+      },
+      {
+        "type":      "range",
+        "id":        "slider_text_size",
+        "min":       12,
+        "max":        35,       
+        "unit":       "px",
+        "label":     "Taille du texte",
+        "default":   22
+      },
+      {
+        "type":      "range",
+        "id":        "slider_btn_size",
+        "min":       12,
+        "max":        35,       
+        "unit":       "px",
+        "label":     "Taille du bouton",
+        "default":   20
+      },      
+	  {
+        "type": "select",
+        "id": "slider_btn_effect",
+        "label": "Effet de survol du bouton",
+        "options": [
+          
+          {
+            "value": "0",
+            "label": "Aucun"
+          },
+          {
+            "value": "1",
+            "label": "Légère opacité"
+          },
+          {
+            "value": "2",
+            "label": "De gauche à droite"
+          }, 
+		  {
+            "value": "3",
+            "label": "Du milieu vers gauche et droite"
+          }
+        ],
+        "default":"0"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Carousel",
+        "category": "Image",
+        "blocks":[
+          {
+          "type": "image",
+          "type": "image",
+          "type": "image"
+         }
+        ]
+      }
+    ],
+    "blocks" : [
+      {
+        "type": "image",
+        "name": "Image",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "slide",
+            "label": "Image",
+            "info":"Taille recommandée 1900x1000"
+          },
+          {
+            "type": "checkbox",
+            "id": "slider_text_enable",
+            "label": "Activer les textes et le bouton sur l'image"
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Titre",
+            "default": "Titre de l'image"
+          },
+          {
+            "type": "text",
+            "id": "subheading",
+            "label": "Baseline",
+            "default": "Texte du carrousel"
+          },
+          {
+            "type": "url",
+            "id": "link",
+            "label": "Lien"
+          },
+          {
+            "type": "text",
+            "id": "linktext",
+            "label": "Texte du bouton",
+            "default": "En savoir plus"
+          },
+		  {
+            "type": "header",            
+            "content": "Placement et effets spéciaux"            
+          },
+          {
+        	"type": "select",
+        	"id": "slider_position",
+        	"label": "Position des textes",
+        	"options": [          
+          		{
+            	"value": "0",
+            	"label": "Placé à gauche"
+          		},
+          		{
+            	"value": "1",
+            	"label": "Centré"
+          		},
+          		{
+            	"value": "2",
+            	"label": "Placé à droite"
+          		}
+          		
+        	],
+			"default":"1"
+      	  },
+		  {
+          	"type": "select",
+          	"id": "slider_overlay_effects",
+          	"label": "Effet de transition des textes",
+          	"options": [
+                {
+              	"value": "999",
+              	"label": "Aucun"
+            	},
+            	{
+              	"value": "0",
+              	"label": "Fondu - de haut en bas"
+            	},
+                {
+              	"value": "1",
+              	"label": "Fondu - de bas en haut"
+            	},
+            	{
+              	"value": "2",
+              	"label": "Fondu - de gauche à droite"
+            	},
+                {
+              	"value": "3",
+              	"label": "Fondu - de droite à gauche"
+            	},
+                {
+              	"value": "4",
+              	"label": "Zoom - apparition"
+            	},
+                {
+              	"value": "5",
+              	"label": "Zoom - apparition de haut en bas "
+            	},
+                {
+              	"value": "6",
+              	"label": "Zoom - apparition de bas en haut"
+            	},
+                {
+              	"value": "7",
+              	"label": "Zoom - apparition de gauche à droite"
+            	},
+                {
+              	"value": "8",
+              	"label": "Zoom - apparition de droite à gauche"
+            	}
+          	],
+            "default":"0"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}
+
+

@@ -1,0 +1,216 @@
+<hr>
+{% assign featured_row = section.settings.home_featured_row %}
+{% assign row_limit_setting = section.settings.grid %}
+{% case section.settings.grid %}
+    {% when '2' %}
+      {%- assign grid_item_width = 'medium--one-half large--one-half' -%}
+      {%- assign image_size = '600x600' -%}
+    {% when '3' %}
+      {%- assign grid_item_width = 'small--one-half medium--one-third large--one-third' -%}
+       {%- assign image_size = '360x560' -%}
+    {% when '4' %}
+      {%- assign grid_item_width = 'small--one-half medium--one-quarter large--one-quarter' -%}
+      {%- assign image_size = '250x' -%}   
+    {% when '6'%}
+      {%- assign grid_item_width = 'small--one-half medium--one-third large--one-third' -%}
+       {%- assign image_size = '360x560' -%}     
+    {% when '8' %}
+      {%- assign grid_item_width = 'small--one-half medium--one-quarter large--one-quarter' -%}
+      {%- assign image_size = '250x' -%}
+    {% when '12' %}
+      {%- assign grid_item_width = 'small--one-half medium--one-quarter large--one-quarter' -%}
+      {%- assign image_size = '250x' -%}
+    {% when '15'%}
+      {%- assign grid_item_width = 'small--one-half medium--one-third large--one-third' -%}
+       {%- assign image_size = '360x560' -%} 
+    {% when '25'%}      
+      {%- assign grid_item_width = 'small--one-half medium--one-third large--one-third' -%}
+       {%- assign image_size = '345x560' -%}   
+  {% when '35'%}
+      {%- assign grid_item_width = 'small--one-half medium--one-third large--one-third' -%}
+       {%- assign image_size = '360x560' -%}
+    {% when '999'%}
+      {%- assign grid_item_width = 'small--one-half medium--one-third large--one-third' -%}
+       {%- assign image_size = '360x560' -%}
+    {% endcase %}
+    {% assign row_limit = section.settings.grid | times: 1 %}
+
+{% if collections[featured_row].all_products_count != 0 and section.settings.home_featured_row != blank %}
+  {% include 'featured-row' with row_limit %}
+  <!-- feature-row -->
+{% else %}
+  <div class="section-header">
+    <h2 class="h1">{{ 'homepage.featured_collection_rows.heading' | t }}</h2>
+    <div class="section-header--right">
+      <a href="{{ collections[featured_row].url }}">{{ 'homepage.featured_collection_rows.more' | t }} &rsaquo;</a>
+    </div>
+  </div>
+
+  <div class="grid text-center row-negative-bottom">
+    <div class="grid-item">
+      <div class="grid-uniform">
+        {% for i in (1..5) %}
+          <div class="grid-item large--one-fifth medium--one-third text-center">
+            {% capture current %}{% cycle 1, 2, 3, 4 %}{% endcapture %}
+              {{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+            <p><a href="/admin/products">{{ 'homepage.featured_collection_rows.example_product_title' | t }}</a> $19.99</p>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% schema %}
+  {
+    "name": "Liste des produits",
+    "class": "products-list",
+    "settings": [
+      {
+        "type": "collection",
+        "id": "home_featured_row",
+        "label": "Collection"
+      },
+      {
+        "type": "select",
+        "id": "grid",
+        "label": "Nombre de produits par rangée",
+        "default": "4",
+        "options": [
+          {
+            "value": "2",
+            "label": "2"
+          },
+          {
+            "value": "3",
+            "label": "3"
+          },
+          {
+            "value": "4",
+            "label": "4"
+          },          
+          {
+            "value": "6",
+            "label": "6"
+          },
+          {
+            "value": "8",
+            "label": "8"
+          },
+          {
+            "value": "12",
+            "label": "12"
+          },
+          {
+            "value": "15",
+            "label": "15"
+          },
+          {
+            "value": "25",
+            "label": "25"
+          },
+          {
+            "value": "35",
+            "label": "35"
+          },
+          {
+            "value": "48",
+            "label": "tous"
+          }
+
+        ]
+      },      
+      {
+      "type": "checkbox",
+      "id": "thumbnails_classic",
+      "label": "Vignette format classique",
+      "default": false,
+      "info": "A utiliser sur le Deluxe pour passer en vue classique"
+      },
+      {
+      "type":      "range",
+      "id":        "img_border_radius",
+      "min":       0,
+      "max":        250,
+      "step":       10,
+      "unit":       "px",
+      "label":     "Degré de l'arrondi des images",
+      "default":   0
+      },
+      {
+      "type":      "range",
+      "id":        "title_truncate",
+      "min":       20,
+      "max":        100,
+      "step":       5,
+      "unit":       "px",
+      "label":     "Nombre de caractères du titre des vignettes",
+      "default":   55
+      },
+      {
+      "type": "range",
+      "id": "grid_crop_title",
+      "label": "Hauteur de la zone du titre - PC",
+      "min": 30,
+      "max": 90,
+      "step": 5,
+      "unit":       "px",
+      "default": 45                
+      },      
+      {
+      "type": "checkbox",
+      "id": "product_show_badge",
+      "label": "Afficher le badge promo",
+      "default": false
+      },
+        {
+      "type": "checkbox",
+      "id": "product_show_saved_amount2",
+      "label": "Afficher l'économie gagnée",
+      "default": true
+      },
+      {
+      "type": "checkbox",
+      "id": "product_show_compare_at_price2",
+      "label": "Afficher le prix barré",
+      "default": true
+      },
+      {
+        "type": "select",
+        "id": "btn_choice",
+        "label": "Choix du bouton",
+        "default": "1",
+        "options": [
+          {
+            "value": "0",
+            "label": "Pas de bouton"
+          },
+          {
+            "value": "1",
+            "label": "Voir le produit"
+          }                   
+        ]
+      },
+        {
+          "type": "checkbox",
+          "id": "collection_show_link",
+          "label": "Afficher le lien voir toute la collection",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "collection_title_padding",
+          "label": "Décaler légèrement le titre vers la gauche",
+          "default": false,
+          "info": "idéal si vous avez mis un fond de couleur"
+        }
+    ],
+    "presets":
+    [
+      {
+        "name": "Liste des produits",
+        "category": "Collections"
+      }
+    ]
+  }
+{% endschema %}

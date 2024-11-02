@@ -1,0 +1,90 @@
+<div id="home-blog" class="index-section home-section">
+  <div class="home-blog">
+    <div class="section-header"> 
+      {%- assign blog = blogs[section.settings.blog] -%}
+
+      {% if blogs[section.settings.blog] != blank %}
+
+      {% if section.settings.title != blank %}
+      <h2 class="h1 section-header--left">{{ section.settings.title | escape }}</h2>
+      {% endif %}
+    </div>
+    {% paginate blog.articles by section.settings.post_limit %}
+
+    <div class="grid-uniform row-negative-bottom blog-list">
+      {% for article in blog.articles %}
+      {% include 'blog-item' with blog.comments_enabled? %}
+      {% endfor %}
+    </div>
+
+    {% if paginate.next.is_link %}
+    <p class="text-center"><a class="btn btn--large btn--outline btn--dark" href="{{ blog.url }}">{{ 'blogs.article.blog_link' | t }} →</a></p>
+    {% endif %}
+
+    {% endpaginate %}
+
+    {% else %}
+
+    <!-- onboarding -->
+    <div class="onboarding">
+      <h2 class="home-section-title">{{ 'homepage.onboarding.section_title' | t }}</h2>
+      <p>{{ 'homepage.onboarding.no_content' | t }}</p>
+    </div>
+
+    {% endif %}
+
+  </div>
+</div>
+
+{% schema %}
+	{
+		"name": "Articles du Blog",
+        "class": "blog-section",
+		"settings": [
+			{
+				"type": "text",
+				"id": "title",
+				"label": "Titre de la section",
+				"default": "Blog"
+			},
+			{
+				"id": "blog",
+				"type": "blog",
+				"label": "Catégorie du Blog"
+			},
+			{
+				"type": "range",
+				"id": "post_limit",
+				"label": "Nombre d'articles",
+				"min": 3,
+				"max": 9,
+				"step": 3,
+				"default": 3
+			},
+			{
+				"type": "range",
+				"id": "blog_crop_image",
+				"label": "Hauteur de la zone image",
+				"min": 200,
+				"max": 400,
+				"step": 10,
+				"default": 200                
+			},
+            {
+            "type": "checkbox",
+            "id": "blog_publish_date",
+            "label": "Afficher l'auteur et la date de publication",
+            "default": true
+            }
+		],
+		"presets": [
+			{
+				"name": "Articles du Blog",
+				"category": "Blog",
+				"settings": {
+					"blog": "News"
+				}
+			}
+		]
+	}
+{% endschema %}

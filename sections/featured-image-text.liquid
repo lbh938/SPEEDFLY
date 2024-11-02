@@ -1,0 +1,170 @@
+<div id="shopify-section-{{ section.id }}" class="shopify-section image-with-text-section">
+  {% if section.settings.layout == 'left' %}
+  <div class="featured_collectionsclearfix grid-layout--standard  container ">      
+    <section class="featured-link--section section-2 sixteen">
+      <div class="featured-link--half featured-link--image">
+        <div class="featured-link--wrap">
+          {% if section.settings.image != blank %}
+          {% capture img_id %}FeatureRowImage-{{ section.id }}{% endcapture %}
+          {% capture wrapper_id %}FeatureRowImageWrapper-{{ section.id }}{% endcapture %}
+          {%- assign img_url = section.settings.image  -%}
+           <div id="{{ wrapper_id }}" class="feature-row__image-wrapper js">
+            <img id="{{ img_id }}"
+                 class="feature-row__image lazyload"
+                 src="{{ section.settings.image | img_url: '1200x1200' }}"
+                 data-src="{{ img_url }}"
+                 data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+                 data-aspectratio="{{ section.settings.image.aspect_ratio }}"
+                 data-sizes="auto"
+                 alt="{{ section.settings.image.alt | escape }}">
+
+          </div>
+
+          <noscript>
+            {{ section.settings.image | img_url: '600x600', scale: 2 | img_tag: section.settings.image.alt, 'feature-row__image' }}
+          </noscript>
+          {% else %}
+          
+          {% endif %}
+        </div>
+      </div>
+      <div class="featured-link--half {% if section.settings.layout == 'left' %}float-right{% endif %}{% if section.settings.layout == 'right' %}float-left{% endif %}">
+
+        <div class="featured-link-text">
+        <div class="text-align--left feature-row__item feature-row__text feature-row__text--{{ section.settings.layout }}">
+          {% if section.settings.title != blank %}
+          <h2 class="h3 collection-title">{{ section.settings.title | escape }}</h2>
+          {% endif %}
+          {% if section.settings.text != blank %}
+          <div class="rte-setting featured-row__subtext">{{ section.settings.text }}</div>
+          {% endif %}
+          {% if section.settings.button_label != blank and section.settings.button_link != blank %}
+          <a href="{{ section.settings.button_link }}" class="btn" >
+            {{ section.settings.button_label | escape }}
+          </a>
+          {% endif %}
+        </div>    
+          </div>
+      </div>
+
+    </section>   
+
+  </div>
+  {% endif %}
+  {% if section.settings.layout == 'right' %}
+  <div class="featured_collectionsclearfix grid-layout--standard  container ">      
+    <section class="featured-link--section section-2 sixteen">
+      
+      <div class="featured-link--half {% if section.settings.layout == 'left' %}float-right{% endif %}{% if section.settings.layout == 'right' %}float-left{% endif %}">
+
+        <div class="featured-link-text">
+        <div class="{% if section.settings.layout == 'right' %}text-align--right{% endif %} feature-row__item feature-row__text feature-row__text--{{ section.settings.layout }}">
+          {% if section.settings.title != blank %}
+          <h2 class="h3 collection-title">{{ section.settings.title | escape }}</h2>
+          {% endif %}
+          {% if section.settings.text != blank %}
+          <div class="rte-setting featured-row__subtext">{{ section.settings.text }}</div>
+          {% endif %}
+          {% if section.settings.button_label != blank and section.settings.button_link != blank %}
+          <a href="{{ section.settings.button_link }}" class="btn" >
+            {{ section.settings.button_label | escape }}
+          </a>
+          {% endif %}
+        </div>  
+        </div>
+      </div>
+      <div class="featured-link--half featured-link--image">
+        <div class="featured-link--wrap">
+          {% if section.settings.image != blank %}
+          {% capture img_id %}FeatureRowImage-{{ section.id }}{% endcapture %}
+          {% capture wrapper_id %}FeatureRowImageWrapper-{{ section.id }}{% endcapture %}
+          {%- assign img_url = section.settings.image  -%}
+           <div id="{{ wrapper_id }}" class="feature-row__image-wrapper js">
+            <img id="{{ img_id }}"
+                 class="feature-row__image lazyload"
+                 src="{{ section.settings.image | img_url: '1200x1200' }}"
+                 data-src="{{ img_url }}"
+                 data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+                 data-aspectratio="{{ section.settings.image.aspect_ratio }}"
+                 data-sizes="auto"
+                 alt="{{ section.settings.image.alt | escape }}">
+
+          </div>
+
+          <noscript>
+            {{ section.settings.image | img_url: '600x600', scale: 2 | img_tag: section.settings.image.alt, 'feature-row__image' }}
+          </noscript>
+          {% else %}
+          
+          {% endif %}
+      
+        </div>
+      </div>
+
+    </section>   
+
+  </div>
+  {% endif %}
+
+</div>
+
+
+
+{% schema %}
+  {
+    "name": "Image + texte",
+    "class": "index-section",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "image",
+        "label": "Image",
+        "info": "Taille recommandée 1000x500"
+      },
+      {
+        "type": "select",
+        "id": "layout",
+        "label": "Alignement de l'image",
+        "default": "left",
+        "options": [
+          {
+            "value": "left",
+            "label": "Gauche"
+          },
+          {
+            "value": "right",
+            "label": "Droite"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Titre",
+        "default": "Image et texte"
+      },
+      {
+        "type": "richtext",
+        "id": "text",
+        "label": "Texte",
+        "default": "<p>Pair large text with an image to give focus to your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>"
+      },
+      {
+        "type": "text",
+        "id": "button_label",
+        "label": "Titre du bouton"
+      },
+      {
+        "type": "url",
+        "id": "button_link",
+        "label": "Lien du bouton"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Image + texte",
+        "category": "Image"
+      }
+    ]
+  }
+{% endschema %}

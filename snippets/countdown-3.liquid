@@ -1,0 +1,194 @@
+<div class="text-center">
+ 
+  
+  <div id="gdcdtimer" class="{% if section.settings.product_cdtimer_theme == "0" %} gdcdtimer-1 {% endif %}{% if section.settings.product_cdtimer_theme == "1" %} gdcdtimer-2 {% endif %}{% if section.settings.product_cdtimer_theme == "2" %} gdcdtimer-3 {% endif %}{% if section.settings.product_cdtimer_theme == "3" %} gdcdtimer-4 {% endif %} cdtimer-permanent-{{ section.settings.product_cdtimer }} cdtimer-progress-{{ section.settings.product_cdtimer_progress }}  cdtimer-cr-{{ section.settings.product_cdtimer_cr }}"><br />
+
+    <script type="text/javascript">
+
+      $(document).ready(function() {
+        var clock;
+
+        var fcday = parseInt({{ section.settings.product_cdtimer_timeday}});
+        var fcmonth = parseInt({{ section.settings.product_cdtimer2_timemonth}});
+        var fcyear = parseInt({{ section.settings.product_cdtimer2_timeyear}});
+
+        var date1 = new Date(+fcyear+'/'+fcmonth+'/'+fcday+' 23:59:59'); 
+        var date2 = new Date(date1).getTime();
+
+        var clock;
+
+        // Grab the current date
+        var currentDate = new Date();
+
+        // Calculate the difference in seconds between the future and current date
+        var diff = date1.getTime() / 1000 - currentDate.getTime() / 1000;
+
+        clock = $('.clock').FlipClock(diff, {
+          clockFace: 'DailyCounter',
+          countdown: true,
+          callbacks: {
+            stop: function() {
+              /*$('.message').html('The clock has stopped!')*/
+            }
+          }
+        });
+
+        if(date2 < currentDate) {         
+          $('.flip-clock-wrapper').css('display','none');
+          $('.progress-bar-texte').css('display','none');
+
+        }
+        if(date2 > currentDate) {         
+          $('.flip-clock-wrapper').css('display','block');
+          $('.progress-bar-texte').css('display','block');
+        }
+
+        $('.flip-clock-wrapper .seconds .flip-clock-label').text('Secondes');
+        $('.flip-clock-wrapper .minutes .flip-clock-label').text('Minutes');
+        $('.flip-clock-wrapper .hours .flip-clock-label').text('Heures');
+        $('.flip-clock-wrapper .days .flip-clock-label').text('Jours');
+
+      });		
+      
+      function randomIntFromInterval(min, max) {
+        return Math.floor(Math.random() * (max - min + 1) + min);
+      }
+      
+      // Settings are here
+      var total_items = 50;
+      var d = new Date();
+      var min_items_left = {{section.settings.product_cdtimer_number1}};
+      var max_items_left = {{section.settings.product_cdtimer_number2}};   
+      var remaining_items = randomIntFromInterval(min_items_left, max_items_left);
+      var min_of_remaining_items = 2;
+      var decrease_after = 0.27;
+      var decrease_after_first_item = 0.23;
+      (function($) {
+        $.fn.progressbar = function() {
+          
+          var a = "<p>{{section.settings.product_cdtimer_text1}} <span class='count'>" + remaining_items + "</span> {{section.settings.product_cdtimer_text2}}</p>" + "<div class='progressbar'><div style='width:100%'></div></div>";
+          this.addClass('items-count');
+          this.html(a + this.html());
+          updateMeter(this);
+          var b = this;
+          
+          
+          setTimeout(function() {
+                                    
+            if (remaining_items == '2' ) {
+            
+            }
+            else {
+              remaining_items--; 
+              $('.count').css('background-color', '#CE0201');
+              $('.count').css('color', '#fff');
+              setTimeout(function() {
+                $('.count').css('background-color', '#fff');
+                $('.count').css('color', '#CE0201')
+              }, 1000 * 60 * 0.03);
+              b.find(".count").text(remaining_items);
+              updateMeter(b)
+            }
+        
+            if (remaining_items < min_of_remaining_items) {
+              
+            }           
+            
+          }, 1000 * 60 * decrease_after_first_item);
+          setInterval(function() {
+            if (remaining_items == '2' ) {
+
+            }
+            else {
+              remaining_items--; 
+              $('.count').css('background-color', '#CE0201');
+              $('.count').css('color', '#fff');
+              setTimeout(function() {
+                $('.count').css('background-color', '#fff');
+                $('.count').css('color', '#CE0201')
+              }, 1000 * 60 * 0.03);
+              b.find(".count").text(remaining_items);
+
+              updateMeter(b);
+            }
+            
+            if (remaining_items < min_of_remaining_items) {
+             
+            }
+            
+           
+          }, 1000 * 60 * decrease_after)
+        };
+
+        function updateMeter(a) {
+          var b = 100 * remaining_items / total_items;
+          if (remaining_items < 10) {
+            a.find('.progressbar div:first').addClass('less-than-ten')
+          }
+          a.find('.progressbar').addClass('active progress-striped');
+          setTimeout(function() {
+            myanimate(a.find('.progressbar div:first'), b);
+            a.find('.progressbar').removeClass('active progress-striped')
+          }, 1000)
+        }
+      }(jQuery));
+
+      function myanimate(a, b) {
+        var c = 0;
+        var d = parseInt(a.closest('.progressbar').css('width'));
+        var e = Math.floor(100 * parseInt(a.css('width')) / d);
+        if (e > b) {
+          c = e
+        }
+
+        function frame() {
+          if (e > b) {
+            c--
+          } else {
+            c++
+          }
+          a.css('width', c + '%');
+          if (c == b || c <= 0 || c >= 100) clearInterval(f)
+            }
+        var f = setInterval(frame, 40)
+        }
+      jQuery.noConflict()(function($) {
+        $(document).ready(function() {
+          /*eraseCookie(nmin);*/
+          $("#progress_bar").progressbar();
+          var tag = "ctdn-12-12".match(/\d+/g);          
+          var d = new Date();
+          var n = d.getDay();
+          var date = 1;
+          var gg = 0;
+          var hh = 0;
+          var ii = 0;        
+         
+          function getRandomInt(max) {
+            return Math.floor(Math.random() * Math.floor(max));
+          }          
+               
+                  
+        });
+      });
+    </script>
+
+    <div class="items-count" id="progress_bar"></div>
+    <div class="clock"></div>
+    <div class="message"></div>   
+    <p class="progress-bar-texte">{{section.settings.product_cdtimer_text3}}</p></div>
+
+
+</div>
+
+<div class="badges {% if section.settings.badges_center %}badges-center{% endif %} ">
+  {% if section.settings.image_secure %}    
+  <img src="{{ section.settings.image_secure | img_url: "large" }}" alt="" />                  
+  {% endif %}  
+  {% if section.settings.textsecureinfo %}
+  <div class="text-reason">{{ section.settings.textsecureinfo }}</div>                  
+  {% endif %}    
+  {% if section.settings.image_secure2 %}
+  <img src="{{ section.settings.image_secure2 | img_url: "large" }}" alt="" />                  
+  {% endif %}   
+</div>

@@ -1,0 +1,901 @@
+{%- assign product = all_products[section.settings.featured_product] -%}
+{% assign sold_out = true %}
+{% if product.available  %}
+  {% assign sold_out = false %}
+{% endif %}
+<div id="ProductSection" data-section-id="{{ section.id }}" class="page-product-{{ section.settings.type_button_pagecenter }}" data-section-type="product-template" data-zoom-toggle="zoom-in" data-zoom-enabled="{{ section.settings.product_image_zoom_enable }}" data-related-enabled="{{ section.settings.product_related_enable }}" data-social-sharing="{{ section.settings.social_sharing }}" data-show-compare-at-price="{{ section.settings.product_show_compare_at_price }}" data-stock="{{ section.settings.product_quantity_message }}" data-incoming-transfer="{{ section.settings.product_incoming_message }}">
+  {% include 'breadcrumb' %}
+  <div class="cont-title-mono"><h2 class="h2 title-primary" itemprop="name">{{ product.title }}</h2></div>
+  
+  {% include "product-images" %}<br />
+
+  <div class="grid-item large--three-fifths">
+
+    <div class="cont-title-all"><h2 class="h2 title-primary {% if section.settings.product_text_top %}decal-title{% endif %}" itemprop="name">{{ product.title }}</h2></div>
+
+    {% if section.settings.product_vendor_enable %}
+    <p class="product-meta" itemprop="brand">{{ product.vendor }}</p>
+    {% endif %}
+
+    <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+
+      {% assign variant = product.selected_or_first_available_variant %}
+
+      <meta itemprop="priceCurrency" content="{{ shop.currency }}">
+      <meta itemprop="price" content="{{ variant.price | divided_by: 100.00 }}">
+      <div id="wrapper-form1">
+        <div id="cont-form">
+          <div class="form-int {% if section.settings.amount_percent %}amount-percent-{{section.settings.amount_percent}}{% endif %}">
+
+            <ul class="inline-list product-meta">
+              <li>
+                <span id="productPrice-{{ section.id }}" class="h1">
+                  {% include 'price' with variant.price %}
+                </span>
+              </li>
+              {% if product.compare_at_price_max > product.price and section.settings.product_show_saved_amount %}
+              <li>
+                <span id="comparePrice-{{ section.id }}" class="sale-tag large">
+                  {% assign compare_price = variant.compare_at_price %}
+                  {% assign product_price = variant.price %}
+                  {% include 'price-sale' %}
+                </span>           
+              </li>
+              {% endif %}
+
+              {% if section.settings.product_reviews_enable %}
+              <li class="product-meta--review">
+                <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
+              </li>
+              {% endif %}
+
+            </ul>
+          </div>        
+
+          <link itemprop="availability" href="http://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}">
+
+          <form action="/cart/add" method="post" enctype="multipart/form-data" id="addToCartForm">
+            <select name="id" id="productSelect-{{ section.id }}" class="product-variants product-variants-{{ section.id }}">
+              {% for variant in product.variants %}
+              {% if variant.available %}
+
+              <option {% if variant == product.selected_or_first_available_variant %} selected="selected" {% endif %} data-sku="{{ variant.sku }}" value="{{ variant.id }}">{{ variant.title }} - {{ variant.price | money_with_currency }}</option>
+
+              {% else %}
+              <option disabled="disabled">
+                {{ variant.title }} - {{ 'products.product.sold_out' | t }}
+              </option>
+              {% endif %}
+              {% endfor %}
+            </select>
+
+            {% if section.settings.product_quantity_enable %}
+            <label for="quantity" class="quantity-selector quantity-selector-{{ section.id }}">{{ 'products.product.quantity' | t }}</label>
+            <input type="number" id="quantity" name="quantity" value="1" min="1" class="quantity-selector">
+            {% endif %}
+
+            {% if section.settings.direct_purchase %}
+            <input type="hidden" name="return_to" value="/checkout" />
+            {% endif %}
+
+            <button type="submit" name="add" id="addToCart" class="btn {% if sold_out %}no-stock{% endif %} {% if section.settings.addtocart_shake %}addtocart-skake{% endif %}">
+            	<span id="addToCartText-{{ section.id }}">{{ 'products.product.add_to_cart' | t }}</span>
+            </button>               
+
+            {% if section.settings.product_quantity_message%}
+            <span id="variantQuantity-{{ section.id }}" class="variant-quantity {% if variant.inventory_management and variant.inventory_quantity < 10 and variant.inventory_quantity > 0 %} is-visible{% endif %}">
+              {% if variant.inventory_management and variant.inventory_quantity < 10 and variant.inventory_quantity > 0 %}
+              {% assign qty = variant.inventory_quantity %}
+              {{ 'products.product.only_left' | t: count: qty }}
+              {% endif %}
+            </span>
+            {% endif %}
+
+            {% if section.settings.product_incoming_message %}
+            <span id="variantIncoming-{{ section.id }}" class="variant-quantity {% if variant.inventory_management and variant.inventory_quantity <= 0 and variant.incoming %} is-visible{% endif %}">
+              {% if variant.inventory_management and variant.inventory_quantity == 0 or variant.inventory_quantity < 0 and current_variant.incoming %}
+              {% if variant.available %}
+              {% assign date = variant.next_incoming_date | date: "month_day_year" %}
+              {{ 'products.product.will_not_ship_until' | t: date: date  }}
+              {% else %}
+              {% assign date = variant.next_incoming_date | date: "month_day_year" %}
+              {{ 'products.product.will_be_in_stock_after' | t: date: date }}
+              {% endif %}
+              {% endif %}
+            </span>
+            {% endif %}
+          </form>
+          
+        </div>
+      </div>
+      {% if section.settings.product_cdtimer_type == "0" %}          
+      {% include "countdown" %}          
+      {% endif %}
+      {% if section.settings.product_cdtimer_type == "1" %}          
+      {% include "countdown-2" %}          
+      {% endif %}
+      {% if section.settings.product_cdtimer_type == "2" %}          
+      {% include "countdown-3" %}          
+      {% endif %}
+    </div>
+    <div class="cont-desc">
+      {% if section.settings.product_excerpt != "" %}
+
+      <div class="grid-item product-description rte" itemprop="description">
+        <div class="my-tab">
+
+          {{section.settings.product_excerpt}} 
+          {% include 'social-sharing' %}
+          {{section.settings.textafterdescription}}  
+          <br />
+          <div id="wrapper-form2">
+            <div id="cont-form2">
+
+              <div class="form-int {% if section.settings.amount_percent %}amount-percent-{{section.settings.amount_percent}}{% endif %}">
+
+                <form action="/cart/add" method="post" id="addToCartForm">
+                  <select name="id" id="productSelect-{{ section.id }}" class="product-variants product-variants-{{ section.id }}">
+                    {% for variant in product.variants %}
+                    {% if variant.available %}
+                    <option {% if variant == product.selected_or_first_available_variant %} selected="selected" {% endif %} data-sku="{{ variant.sku }}" value="{{ variant.id }}">{{ variant.title }} - {{ variant.price | money_with_currency }}</option>
+                    {% else %}
+                    <option>
+                      {{ variant.title }} - {{ 'products.product.sold_out' | t }}
+                    </option>
+                    {% endif %}
+                    {% endfor %}
+                  </select>
+                  {% if section.settings.product_quantity_enable %}
+                  <label for="quantity" class="quantity-selector quantity-selector-{{ section.id }}">{{ 'products.product.quantity' | t }}</label>
+                  <input type="number" id="quantity" name="quantity" value="1" min="1" class="quantity-selector">
+                  {% endif %}
+                  <button type="submit" name="add" id="addToCartBis" class="btn add-cart-upsell">
+                    <span class="icon icon-cart"></span>
+                    <span id="addToCartText-{{ section.id }}">{{ 'products.product.add_to_cart' | t }}</span>
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>          
+        </div> 
+      </div>
+      
+      
+      {% else %}
+      {% if  product.description != "" %}
+      <div class="grid-item product-description rte" itemprop="description">
+
+        {{ product.description }}
+        <br />{% include 'social-sharing' %}
+        {{section.settings.textafterdescription}} 
+
+        {% if settings.theme_monoproduit == true %}
+       
+        <br />
+        <div id="wrapper-form2">
+          <div id="cont-form2">
+            <div class="form-int {% if section.settings.amount_percent %}amount-percent-{{section.settings.amount_percent}}{% endif %}">
+
+              <form action="/cart/add" method="post" id="addToCartForm" class="form-upsell">
+                <select name="id" id="productSelect-{{ section.id }}" class="product-variants product-variants-{{ section.id }}">
+                  {% for variant in product.variants %}
+                  {% if variant.available %}
+                  <option {% if variant == product.selected_or_first_available_variant %} selected="selected" {% endif %} data-sku="{{ variant.sku }}" value="{{ variant.id }}">{{ variant.title }} - {{ variant.price | money_with_currency }}</option>
+                  {% else %}
+                  <option>
+                    {{ variant.title }} - {{ 'products.product.sold_out' | t }}
+                  </option>
+                  {% endif %}
+                  {% endfor %}
+                </select>
+                {% if section.settings.product_quantity_enable %}
+                <label for="quantity" class="quantity-selector quantity-selector-{{ section.id }}">{{ 'products.product.quantity' | t }}</label>
+                <input type="number" id="quantity" name="quantity" value="1" min="1" class="quantity-selector">
+                {% endif %}
+                <button type="submit" name="add" id="addToCart" class="btn add-cart-upsell">               
+                  <span id="addToCartText-{{ section.id }}">{{ 'products.product.add_to_cart' | t }}</span>
+                </button>
+              </form>
+              
+            </div>
+          </div>  
+          </div>
+          {% endif %}        
+      </div>
+      {% endif %}   
+	
+      {% endif %}
+       </div> 
+    </div> 
+  </div>
+ 
+  {% if section.settings.product_featured_review == true %}
+  <div class="cont-avis cont-avis2">
+    <div id="looxReviews" data-product-id="{{product.id}}">{{ product.metafields.loox.reviews }}</div>
+    <div id="shopify-product-reviews" data-id="{{product.id}}">{{ product.metafields.spr.reviews }}</div>
+    <div class="ryviu-show-reviews" product-handle="{{product.handle}}">{{product.metafields.ryviu.reviews}}</div>
+    <div id="shopify-ali-review" product-id="{{ product.id }}">{{ shop.metafields.review_collector.review_code }}</div>
+  </div>
+  {% endif %}   
+
+  {% unless product == empty %}
+  <script type="application/json" id="ProductJson-{{ section.id }}">
+        {{ product | json }}
+  </script>
+  {% if section.settings.product_quantity_message or section.settings.product_incoming_message %}
+  <script type="application/json" id="VariantJson-{{ section.id }}">
+          [
+            {% for variant in product.variants %}
+              {
+                 "incoming": {% if variant.incoming == 'null' or variant.next_incoming_date == null %}false{% else %}{{ variant.incoming | default: false | json }}{% endif %},
+                 "next_incoming_date": {{ variant.next_incoming_date | date: format: 'month_day_year' | json }}
+              }{% unless forloop.last %},{% endunless %}
+            {% endfor %}
+          ]      
+  </script>
+  {% endif %}
+  {% endunless %}
+
+
+
+<script type="application/json" id="ProductJson-{{ section.id }}">
+        {{ sections | json }}
+</script>
+{% unless product == empty %}
+<script type="application/json" id="ProductJson-{{ section.id }}">
+        {{ product | json }}
+</script>
+{% endunless %}
+
+{% schema %}
+{  
+   "name":"Produit mis en avant",
+   "class":"index-section index-section--featured-product",
+   "settings":[  
+      {  
+         "type":"product",
+         "id":"featured_product",
+         "label":"Produit"
+      },
+      {  
+         "type":"header",
+         "content":"Options du bouton d'action"
+      },
+      {  
+         "type":"checkbox",
+         "id":"direct_purchase",
+         "label":"Supprimer l'étape panier au clic bouton acheter",
+         "info":"Pour passer directement à la page checkout"
+      },
+      {  
+         "type":"checkbox",
+         "id":"addtocart_shake",
+         "label":"Bouton acheter vibrant",
+         "info":"Pour que le client soit interpellé par le bouton d'achat"
+      },
+      {  
+         "type":"checkbox",
+         "id":"product_text_top",
+         "label":"Mettre un espace avant le titre"
+      },
+      {
+         "type":"header",
+         "content":"Compteur de visites"
+      },
+      {
+         "type":"checkbox",
+         "id":"product_visitor",
+         "label":"Activer le compteur de visites"
+      },
+      {
+         "type":"text",
+         "id":"visitor_text1",
+         "label":"Texte avant le chiffre du compteur",
+         "default":"Il y a actuellement"
+      },
+      {
+         "type":"text",
+         "id":"visitor_number1",
+         "label":"Chiffre minimal du compteur",
+         "default":"60"
+      },
+      {
+         "type":"text",
+         "id":"visitor_number2",
+         "label":"Chiffre maximal du compteur",
+         "default":"120"
+      },
+      {
+         "type":"text",
+         "id":"visitor_text2",
+         "label":"Texte après le chiffre du compteur",
+         "default":"visiteurs sur cette page"
+      },
+      {
+         "type":"header",
+         "content":"Timer - Compte à rebours"
+      },
+      {
+         "type":"checkbox",
+         "id":"product_cdtimer",
+         "label":"Activer compte à rebours promotion",
+         "info":"Si vous souhaitez mettre ce compteur sur un produit spécifique, copiez le code ci-dessous et le coller dans l'éditeur du produit...... code:       <div id='showcdtimer' data-jours='0' data-heures='0' data-minutes='40'></div>"
+      },
+      {
+         "type":"select",
+         "id":"product_cdtimer_type",
+         "label":"Type de compteur", 
+         "info":"Faite une modification pour faire repartir le cookie du client",
+         "options":[
+            {
+               "value":"0",
+               "label":"1. Décompte classique - sans cookies"
+            },
+            {
+               "value":"1",
+               "label":"2. Mémorise le temps resté sur le site - cookies "
+            },
+            {
+               "value":"2",
+               "label":"3. Décompte sur date butoir"
+            }             
+         ]
+      },
+       {
+         "type":"select",
+         "id":"product_cdtimer_theme",
+         "label":"Modèle",
+         "options":[
+            {
+               "value":"0",
+               "label":"Modèle 1"
+            },
+            {
+               "value":"1",
+               "label":"Modèle 2"
+            },
+            {
+               "value":"2",
+               "label":"Modèle 3"
+            }, 
+            {
+               "value":"3",
+               "label":"Modèle 4"
+            } 
+         ]
+      },      
+      {
+         "type":"checkbox",
+         "id":"product_cdtimer_cookie",
+         "label":"Afficher le bouton pour supprimer son cookie",
+         "info":"Pour tester et réinitialiser son cookie",
+         "default": false
+      },
+      {
+         "type":"checkbox",
+         "id":"product_cdtimer_progress",
+         "label":"Masquer que le stock"
+      },
+      {
+         "type":"checkbox",
+         "id":"product_cdtimer_cr",
+         "label":"Masquer que le compte à rebours"
+      },
+      
+      {
+         "type":"select",
+         "id":"product_cdtimer_timemn",
+         "label":"Minutes",
+         "info": "Type de compteur 1 et 2",
+         "options":[
+            {
+               "value":"0",
+               "label":"0"
+            },
+            {
+               "value":"9",
+               "label":"10"
+            },
+            {
+               "value":"13",
+               "label":"13"
+            },
+            {
+               "value":"16",
+               "label":"16"
+            },
+            {
+               "value":"19",
+               "label":"20"
+            },
+            {
+               "value":"23",
+               "label":"23"
+            },
+            {
+               "value":"26",
+               "label":"26"
+            },
+            {
+               "value":"29",
+               "label":"30"
+            },
+            {
+               "value":"33",
+               "label":"33"
+            },
+            {
+               "value":"36",
+               "label":"36"
+            },
+            {
+               "value":"39",
+               "label":"40"
+            },
+            {
+               "value":"43",
+               "label":"43"
+            },
+            {
+               "value":"46",
+               "label":"46"
+            },
+            {
+               "value":"49",
+               "label":"50"
+            },
+            {
+               "value":"53",
+               "label":"53"
+            },
+            {
+               "value":"56",
+               "label":"56"
+            },
+            {
+               "value":"59",
+               "label":"60"
+            }
+         ]
+      },
+      {
+         "type":"select",
+         "id":"product_cdtimer_timehour",
+         "label":"Heures",
+         "info": "Type de compteur 1 et 2",
+         "options":[
+            {
+               "value":"0",
+               "label":"0"
+            },
+            {
+               "value":"1",
+               "label":"1"
+            },
+            {
+               "value":"2",
+               "label":"2"
+            },
+            {
+               "value":"3",
+               "label":"3"
+            },
+            {
+               "value":"4",
+               "label":"4"
+            },
+            {
+               "value":"6",
+               "label":"6"
+            },
+            {
+               "value":"8",
+               "label":"8"
+            },
+            {
+               "value":"10",
+               "label":"10"
+            },
+            {
+               "value":"12",
+               "label":"12"
+            },
+            {
+               "value":"24",
+               "label":"24"
+            }
+         ]
+      },
+      {
+         "type":"select",
+         "id":"product_cdtimer_timeday",
+         "label":"Jours",
+         "info": "Attention de bien le modifier le jour si vous passez en Date butoir !",
+         "options":[
+            {
+               "value":"0",
+               "label":"0"
+            },
+            {
+               "value":"1",
+               "label":"1"
+            },
+            {
+               "value":"2",
+               "label":"2"
+            },
+            {
+               "value":"3",
+               "label":"3"
+            },
+            {
+               "value":"4",
+               "label":"4"
+            },
+            {
+               "value":"5",
+               "label":"5"
+            },
+            {
+               "value":"6",
+               "label":"6"
+            },
+            {
+               "value":"7",
+               "label":"7"
+            },
+            {
+               "value":"8",
+               "label":"8"
+            },
+            {
+               "value":"9",
+               "label":"9"
+            },
+			{
+               "value":"10",
+               "label":"10"
+            },
+            {
+               "value":"11",
+               "label":"11"
+            },
+            {
+               "value":"12",
+               "label":"12"
+            },
+			{
+               "value":"13",
+               "label":"13"
+            },
+			{
+               "value":"14",
+               "label":"14"
+            },
+            {
+               "value":"15",
+               "label":"15"
+            },
+            {
+               "value":"16",
+               "label":"16"
+            },
+			{
+               "value":"17",
+               "label":"17"
+            },
+			{
+               "value":"18",
+               "label":"18"
+            },
+            {
+               "value":"19",
+               "label":"19"
+            },
+			{
+               "value":"20",
+               "label":"20"
+            },
+			{
+               "value":"21",
+               "label":"21"
+            },
+            {
+               "value":"22",
+               "label":"22"
+            },
+			{
+               "value":"23",
+               "label":"23"
+            },
+			{
+               "value":"24",
+               "label":"24"
+            },
+            {
+               "value":"25",
+               "label":"25"
+            },
+			{
+               "value":"26",
+               "label":"26"
+            },
+			{
+               "value":"27",
+               "label":"27"
+            },
+            {
+               "value":"28",
+               "label":"28"
+            },
+			{
+               "value":"29",
+               "label":"29"
+            },
+			{
+               "value":"30",
+               "label":"30"
+            },
+            {
+               "value":"31",
+               "label":"31"
+            }
+         ]
+      },
+      
+      {
+         "type":"header",
+         "content":"Date Butoir UNIQUEMENT"
+      },      
+      {
+         "type":"select",
+         "id":"product_cdtimer2_timemonth",
+         "label":"Mois",
+         "options":[
+            {
+               "value":"01",
+               "label":"01"
+            },
+            {
+               "value":"02",
+               "label":"02"
+            },
+            {
+               "value":"03",
+               "label":"03"
+            },
+            {
+               "value":"04",
+               "label":"04"
+            },
+            {
+               "value":"05",
+               "label":"05"
+            },
+            {
+               "value":"06",
+               "label":"06"
+            },
+            {
+               "value":"07",
+               "label":"07"
+            },
+            {
+               "value":"08",
+               "label":"08"
+            },
+            {
+               "value":"09",
+               "label":"09"
+            },
+            {
+               "value":"10",
+               "label":"10"
+            },
+			{
+               "value":"11",
+               "label":"11"
+            },
+			{
+               "value":"12",
+               "label":"12"
+            }            
+         ]
+      },
+      {
+         "type":"select",
+         "id":"product_cdtimer2_timeyear",
+         "label":"Année",
+         "options":[
+            {
+               "value":"2018",
+               "label":"2018"
+            },
+            {
+               "value":"2019",
+               "label":"2019"
+            },
+            {
+               "value":"2020",
+               "label":"2020"
+            },
+            {
+               "value":"2021",
+               "label":"2021"
+            },
+            {
+               "value":"2022",
+               "label":"2022"
+            },
+            {
+               "value":"2023",
+               "label":"2023"
+            },
+            {
+               "value":"2024",
+               "label":"2024"
+            } 
+         ]
+      },
+      {
+         "type":"header",
+         "content":"Textes compte à rebours"
+      },
+      {
+         "type":"text",
+         "id":"product_cdtimer_days",
+         "label":"Texte jours ",
+         "default":"jours"
+      },
+      {
+         "type":"text",
+         "id":"product_cdtimer_hours",
+         "label":"Texte heures ",
+         "default":"heures"
+      },
+      {
+         "type":"text",
+         "id":"product_cdtimer_minutes",
+         "label":"Texte minutes ",
+         "default":"minutes"
+      },
+      {
+         "type":"text",
+         "id":"product_cdtimer_seconds",
+         "label":"Texte secondes ",
+         "default":"secondes"
+      },
+      {
+         "type":"text",
+         "id":"product_cdtimer_text1",
+         "label":"Texte d'urgence avant le stock ",
+         "default":"Dépêchez-vous : seulement "
+      },
+      {
+         "type":"text",
+         "id":"product_cdtimer_number1",
+         "label":"Chiffre minimal du stock",
+         "default":"12"
+      },
+      {
+         "type":"text",
+         "id":"product_cdtimer_number2",
+         "label":"Chiffre maximal du stock",
+         "default":"20"
+      },
+      {
+         "type":"text",
+         "id":"product_cdtimer_text2",
+         "label":"Texte d'urgence après le stock ",
+         "default":" en stock "
+      },
+      {
+         "type":"text",
+         "id":"product_cdtimer_text3",
+         "label":"Texte d'urgence sous le compte à rebours ",
+         "default":"La promotion expire à la fin du compte à rebours !"
+      },
+      {  
+         "type":"header",
+         "content":"Options de la fiche produit"
+      },
+      {  
+         "type":"checkbox",
+         "id":"flexsliderv2",
+         "label":"Activer le carrousel d'image avancé"
+      },
+      {  
+         "type":"checkbox",
+         "id":"product_image_zoom_enable",
+         "label":"Activer le zoom sur l'image"
+      },
+      {  
+         "type":"checkbox",
+         "id":"product_quantity_enable",
+         "label":"Afficher le selecteur de quantité"
+      },
+      {  
+         "type":"checkbox",
+         "id":"product_quantity_message",
+         "label":"Afficher le message de quantité"
+      },
+      {  
+         "type":"checkbox",
+         "id":"product_incoming_message",
+         "label":"Afficher le prix au format select"
+      },
+      {  
+         "type":"checkbox",
+         "id":"product_vendor_enable",
+         "label":"Afficher le vendeur"
+      },
+      {  
+         "type":"checkbox",
+         "id":"product_show_saved_amount",
+         "label":"Afficher l'économie gagnée",
+         "default":true
+      },
+      {  
+         "type":"text",
+         "id":"product_show_text_amount",
+         "label":"Texte économisez",
+         "default":"Economisez"
+      },
+      {  
+         "type":"checkbox",
+         "id":"amount_percent",
+         "label":"Afficher le pourcentage"
+      },
+      {  
+         "type":"checkbox",
+         "id":"product_show_compare_at_price",
+         "label":"Afficher le prix barré",
+         "default":false
+      },
+      {  
+         "type":"image_picker",
+         "id":"image_secure",
+         "label":"Image infos de paiement",
+         "info":"Max 500px"
+      },
+      {  
+         "type":"richtext",
+         "id":"textsecureinfo",
+         "label":"Texte infos supplémentaires",
+         "default":"<p></p>"
+      },
+      {  
+         "type":"image_picker",
+         "id":"image_secure2",
+         "label":"Image infos supplémentaires",
+         "info":"Max 500px"
+      },
+      {  
+         "type":"richtext",
+         "id":"product_excerpt",
+         "label":"Introduction du produit",
+         "info":"Prend la main sur la description d'origine"
+      },
+      {  
+         "type":"html",
+         "id":"textafterdescription",
+         "label":"Texte en dessous de la description",
+         "default":"&nbsp;"
+      },
+      {  
+         "type":"checkbox",
+         "id":"product_featured_review",
+         "label":"Afficher les avis (uniquement sur monoproduit)",
+         "default":false
+      }
+   ],
+   "presets":[  
+      {  
+         "name":"Produit mis en avant",
+         "category":"Product"
+      }
+   ]
+}
+{% endschema %}
+
+

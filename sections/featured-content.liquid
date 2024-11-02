@@ -1,0 +1,101 @@
+{% for block in section.blocks %}
+	<div {{ block.shopify_attributes }}>
+	{% case block.type %}
+
+		{% when "text" %}
+
+		  <hr>
+		  {% if block.settings.title != blank %}
+			<div class="section-header">
+			  <h2 class="h1">{{ block.settings.title | escape }}</h2>
+			</div>
+		  {% endif %}
+			<div class="rte">
+				{{ block.settings.content }}
+			</div>
+
+		{% when "page" %}
+			<hr>
+			{% if block.settings.page == blank or pages[block.settings.page] == empty %}
+
+				{% if block.settings.show_heading %}
+					<div class="section-header">
+					  <h2 class="h1">{{ block.title }}</h2>
+					</div>
+				{% endif %}
+
+				<p>{{ 'homepage.onboarding.no_content' | t }}</p>
+
+			{% else %}
+
+			  {% assign page = pages[block.settings.page] %}
+
+				{% if block.settings.show_heading %}
+					<div class="section-header">
+					  <h2 class="h1">{{ page.title }}</h2>
+					</div>
+				{% endif %}
+
+				  <div class="rte">
+				   {{ page.content }}
+				  </div>
+
+			{% endif %}
+	{% endcase %}
+	</div>
+{% endfor %}
+
+{% schema %}
+	{
+	  "name": "Contenu riche",
+	  "class": "featured-content-section",
+	  "blocks": [
+      {
+        "type": "text",
+        "name": "Text",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Titre",
+            "default": "Titre de la zone de contenu"
+          },
+          {
+            "type": "richtext",
+	          "id": "content",
+	          "label": "Contenu",
+	          "default": "<p>Texte de la zone de contenu libre</p>"
+	        }
+	      ]
+      },
+	    {
+	      "type": "page",
+	      "name": "Page",
+	      "settings": [
+	        {
+		        "type": "checkbox",
+		        "id": "show_heading",
+		        "label": "Afficher le titre",
+		        "default": true
+		      },
+		      {
+		        "type": "page",
+		        "id": "page",
+		        "label": "Page"
+		      }
+		    ]
+	    }
+    ],
+    "presets": [
+      {
+        "name": "Zone libre (Texte ou page)",
+        "category": "Text",
+        "blocks": [
+          {
+            "type": "text"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,79 @@
+<div id="home-faq" class="index-section home-section" data-section-id="1499436552422" data-section-type="home-faq">
+  <div id="faq" class="grid-uniform">
+    <div class="section-header">
+      {% if section.settings.title != blank %}
+      <h2 class="h1 section-header--left section-title-decal-false">{{ section.settings.title | escape }}</h2>
+      {% endif %}
+    </div>
+    <div class="cont-accordion">
+      <div id="accordion" class="panel-group custom_collapse" role="tablist" aria-multiselectable="true">
+        {% for block in section.blocks %}
+        <div class="panel panel-default">
+          <div class="panel-heading" role="tab" id="headingOne-{{ block.id }}">
+            <h3 class="panel-title"><a role="button" data-toggle="collapse" data-parent="#accordion" class="collapsed" href="#collapseOne-{{ block.id }}" aria-expanded="true" aria-controls="collapseOne-{{ block.id }}"> 
+              <i></i>{{ block.settings.home-faq-title | escape }}</a>
+            </h3>
+          </div>
+          <div id="collapseOne-{{ block.id }}" class="panel-collapse collapse {% if forloop.first == true %}in{% endif %}" role="tabpanel" aria-labelledby="headingOne">
+            <div class="panel-body">{{ block.settings.home-faq-content }}</div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+	{
+		"name": "FAQ",
+ 		"max_blocks": 30,
+        "class": "section-faq", 
+		"settings": [
+			{
+				"type": "text",
+				"id": "title",
+				"label": "Header",
+				"default": "FAQ"
+			}
+		],
+		"blocks" : [
+			{
+				"type": "text",
+				"name": "FAQ",
+				"settings": [
+					{
+						"type": "text",
+						"id": "home-faq-title",
+						"default": "Question",
+						"label": "Titre de la question"
+					},
+					{
+						"type": "richtext",
+						"id": "home-faq-content",
+						"default": "<p>Texte de la réponse</p>",
+						"label": "Texte de la réponse"
+					}
+				]
+			}
+		],
+		"presets": [
+			{
+				"name": "FAQs",
+				"category": "Text",
+				"blocks": [
+					{
+						"type": "text"
+					},
+					{
+						"type": "text"
+					},
+					{
+						"type": "text"
+					}
+					
+				]
+			}
+		]
+	}
+{% endschema %}

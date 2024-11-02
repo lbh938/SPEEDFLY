@@ -1,0 +1,206 @@
+<div class="mobile-type-header-{{ settings.navbar_header_position }} cont-header header-noborder-{{ section.settings.type_header_border }} header-fixed-{{ section.settings.type_header_actived }} {{ section.settings.type_headers }}">
+  {% if section.settings.topheader_actived == true  or settings.topheader2_actived == true %}
+  <div class="topheader topheader-show-true">
+    {% endif %}
+    {% if section.settings.topheader_actived == true %}
+    <p>{{ section.settings.topheader }}</p>
+    {% endif %}
+
+    {% if settings.topheader2_actived == true %}
+
+    {% assign livraison_offerte_a_partir_de = settings.free_shipping_price %}
+    {% assign montant_avant_livraison_offerte = livraison_offerte_a_partir_de | times: 100.0 | minus: cart.total_price %}
+    {% if montant_avant_livraison_offerte > 0 %}	
+    <p>{{ settings.free_shipping_text1 }} <strong class="free-shipping-bar-number">{{montant_avant_livraison_offerte | money }}</strong> {{ settings.free_shipping_text2 }}</p>
+    {% else %}
+    <span class="free-shipping-bar-on">{{ settings.free_shipping_text3 }}</span>
+    {% endif %}
+
+    {% endif %}
+
+    {% if section.settings.topheader_actived == true  or settings.topheader2_actived == true %}
+  </div>
+  {% endif %}
+  
+  {% if section.settings.type_headers == 'header1' %}
+  {% include 'header1' %}
+  {% endif %}
+  {% if section.settings.type_headers == 'header2' %}
+  {% include 'header2' %}
+  {% endif %}
+  {% if section.settings.type_headers == 'header3' %}
+  {% include 'header3' %}
+  {% endif %}
+  {% if section.settings.type_headers == 'header4' %}
+  {% include 'header4' %}
+  {% endif %}   
+  
+</div>
+{% schema %}
+{  
+   "name":"Header",
+   "class":"header-section",
+   "settings":[  
+      {  
+         "type":"select",
+         "id":"type_headers",
+         "label":"Choix du header",
+         "options":[  
+            {  
+               "value":"header1",
+               "label":"Classique 1"
+            },
+            {  
+               "value":"header2",
+               "label":"Minimaliste 1"
+            },
+            {  
+               "value":"header4",
+               "label":"Minimaliste 2"
+            },
+            {  
+               "value":"header3",
+               "label":"Minimaliste 3"
+            }
+         ]
+      }, 
+      {
+        "type": "paragraph",
+        "content": "Choisir un header Minimaliste désactivera automatique les textes et images"
+      },
+      {  
+         "type":"header",
+         "content":"Options Génériques"
+      },
+      {  
+         "type":"checkbox",
+         "id":"type_header_border",
+         "label":"Supprimer la bordure du bas du header",
+         "default":false
+      },
+      {  
+         "type":"checkbox",
+         "id":"topheader_actived",
+         "label":"Afficher le bandeau en haut de page"
+      },      
+      {  
+         "type":"checkbox",
+         "id":"header_box_actived",
+         "label":"Afficher Lien compte et connexion"
+      },
+      {  
+         "type":"checkbox",
+         "id":"search_actived",
+         "label":"Masquer le moteur de recherche"
+      },
+      {  
+         "type":"richtext",
+         "id":"topheader",
+         "label":"Texte du bandeau en haut de page",
+         "info":"55 characters max"
+      },    
+      {  
+         "type":"header",
+         "content":"Logo"
+      },
+      {  
+         "type":"image_picker",
+         "id":"logo",
+         "label":"logo",
+         "info":"400px max"
+      },
+      {  
+         "type":"text",
+         "id":"logo_max_width",
+         "label":"longueur du logo",
+         "default":"305"
+      },      
+      {  
+         "type":"link_list",
+         "id":"menu",
+         "label":"Menu principal",
+         "default":"main-menu",
+         "info":"Menu classique + mobile, pour le mégamenu rendez vous dans theme settings "
+      },        
+      {  
+         "type":"select",
+         "id":"type_nav_position2",
+         "label":"Position du menu",
+         "options":[  
+            {  
+               "value":"0",
+               "label":"A droite"
+            },
+            {  
+               "value":"1",
+               "label":"A gauche"
+            },
+            {  
+               "value":"2",
+               "label":"Centré"
+            }
+         ]
+      },      
+      {  
+         "type":"header",
+         "content":"Options Headers Classiques"
+      },
+      
+      {
+       
+         "type":"image_picker",
+          "id":"image_header",
+          "label":"Image dans le header classique",
+          "info":"400px max"
+      },
+      {  
+          "type":"text",
+          "id":"image_header_max_width",
+          "label":"longueur de l'image",
+          "default":"260"
+      },
+      {  
+         "type":"select",
+         "id":"image_header_position",
+         "label":"Position de l'image",
+         "options":[  
+            {  
+               "value":"0",
+               "label":"A droite"
+            },
+            {  
+               "value":"1",
+               "label":"Au centre"
+            }            
+         ]
+      },
+      {  
+         "type":"richtext",
+         "id":"header_message2",
+         "label":"Texte au dessus du moteur de recherche et panier",
+         "info":"Uniquement sur le header classique - 55 caractères max"
+      },      
+      {  
+         "type":"richtext",
+         "id":"header_message",
+         "label":"Texte à côté du logo",
+         "info":"Uniquement sur le header classique - 55 caractères max"
+      },
+      {  
+         "type":"checkbox",
+         "id":"header_message_center",
+         "label":"Centrer le texte à côté du logo"
+      },
+      {  
+         "type":"header",
+         "content":"Uniquement sur la version Deluxe"
+      },
+      {  
+         "type":"checkbox",
+         "id":"type_header_actived",
+         "label":"Header fixé au scroll",
+         "default":true
+      }
+   ]
+}
+{% endschema %}

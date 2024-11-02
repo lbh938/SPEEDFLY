@@ -1,0 +1,34 @@
+{% assign blog_comments = blog_item %}
+
+<div class="grid-item small--one-half medium--one-third large--one-third on-sale">
+
+  <div class="article__content display-table">
+
+    <div class="display-table-cell">
+      {% if article.image %}
+      <div class="blog-cont-img" style="height:{{section.settings.blog_crop_image}}px;overflow:hidden;">
+      {% assign image_alt = article.title | escape %}
+      {{ article | img_url: '1024x1024' | img_tag: image_alt, 'article__image' | link_to: article.url }}
+      </div>
+      <h3 class="h3 article__title">{{ article.title | truncate: 67 }}</h3>
+      
+      {% endif %}
+      {% if section.settings.blog_publish_date == true %}
+      <p class="blog-meta">        
+        
+        {% capture date %}<strong><time pubdate datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: format: 'month_day_year' }}</time></strong>{% endcapture %}
+        {% capture author %}<strong>{{ article.author }}</strong>{% endcapture %}
+        {{ 'blogs.article.author_on_date_html' | t: author: author, date: date }}
+      </p>
+      {% endif %}
+      <div class="article__excerpt rte">
+        <p>{{ article.excerpt_or_content | strip_html | truncatewords: 25 }}</p>
+      </div>
+
+      <p><a class="btn btn-primary" href="{{ article.url }}">{{ 'blogs.article.read_more' | t }}</a></p>
+
+    </div>
+
+  </div>
+</div>
+

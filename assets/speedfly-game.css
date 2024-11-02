@@ -1,0 +1,183 @@
+#exitpopup_bg
+{
+  display: none; 
+  width:100%; 
+  height:100%; 
+  position:fixed; 
+  background:#000000; 
+  opacity: .8; 
+  filter:alpha(opacity=0.8); 
+  z-index:998;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+}
+#exitpopup
+{
+  display: none;
+  z-index: 999;
+  position:fixed; 
+  box-shadow: 0 0 15px #ddd;
+  width: 350px;
+  margin: 0px auto;
+  border-radius:0;
+  background-color: #fff;
+  min-height: 220px;
+  top: auto;
+  left: 0px;
+  padding: 0px 0px;
+}  
+.speed-game {
+  font-family: arial;
+}
+.speed-game a {
+  color:#fff;
+}
+.speed-game #board {
+  padding: 100px 2px 20px 4px;
+  overflow: hidden;
+  width: 360px;
+  height: 200px;
+  text-align: center;
+}
+
+#box1,#box2,#box3 {
+  position: relative;
+  float: left;
+  margin: 0px;
+}
+
+#box1,#box2,#box3 {
+  overflow: hidden;
+  width: 115px;
+  height: 90px;
+}
+#box1 #box_o_t,#box2 #box_o_t,#box3 #box_o_t {
+  left: 0px;
+  position: relative;
+  top: 3px;
+  z-index: 100;
+}
+#box1 #box_o_b,#box2 #box_o_b,#box3 #box_o_b {
+  left: 0px;
+  position: relative;
+  top:-18px;
+  z-index: 300;
+}
+
+.speed-game #kick_jump {
+  position: absolute;
+  z-index: 200;
+  top: -118px;
+  left: 0px;
+  display: none;
+}
+
+.speed-game #msg_bd {
+  position: absolute;
+  top: 25px;
+  left: 0px;
+  width: 350px;
+  padding: 10px;
+  font-size: 12px;
+  text-align: center;
+  color: #fff;
+}
+
+.speed-game .color_0 {
+  background-color: #70B3CD !important;
+}
+
+.speed-game .color_1 {
+  background-color: #B12F2F !important;
+}
+
+.speed-game .color_2 {
+  background-color: #1F8E1A !important;
+}
+
+.speed-game #heading {
+  position: absolute;
+  top: 40px;
+  left: 20px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #555;
+}
+
+.speed-game .hide {
+  display: none;
+}
+
+.speed-game #start_game {
+  cursor: pointer;
+  margin: 0 auto;
+  border: 1px solid #e7a943;
+  border-bottom-color: #d6982f;
+  border-top-color: #f5b74e;
+  color: #623f1d;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 18px;
+  padding: 10px 18px;
+  text-decoration: none;
+  text-shadow: 0 1px 0 #fede9d;
+  /* CSS3 */
+  -moz-box-shadow: 0px 1px 2px #d9d9d9, inset 0px 1px 0px #ffe598;
+  -webkit-box-shadow: 0px 1px 2px #d9d9d9, inset 0px 1px 0px #ffe598;
+  box-shadow: 0px 1px 2px #d9d9d9, inset 0px 1px 0px #ffe598;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+  /* Gradient */
+  background-color: #feda71;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#feda71), to(#febb49));
+  /* Saf4+, Chrome */
+  background-image: -webkit-linear-gradient(top, #feda71, #febb49);
+  /* Chrome 10+, Saf5.1+ */
+  background-image: -moz-linear-gradient(top, #feda71, #febb49);
+  /* FF3.6 */
+  background-image: -ms-linear-gradient(top, #feda71, #febb49);
+  /* IE10 */
+  background-image: -o-linear-gradient(top, #feda71, #febb49);
+  /* Opera 11.10+ */
+  background-image: linear-gradient(top, #feda71, #febb49);
+}
+
+.speed-game #start_game:hover {
+  background-color: #fee296;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#fee296), to(#fec166));
+  /* Saf4+, Chrome */
+  background-image: -webkit-linear-gradient(top, #fee296, #fec166);
+  /* Chrome 10+, Saf5.1+ */
+  background-image: -moz-linear-gradient(top, #fee296, #fec166);
+  /* FF3.6 */
+  background-image: -ms-linear-gradient(top, #fee296, #fec166);
+  /* IE10 */
+  background-image: -o-linear-gradient(top, #fee296, #fec166);
+  /* Opera 11.10+ */
+  background-image: linear-gradient(top, #fee296, #fec166);
+}
+.box-close {
+  position: absolute;
+  top:-15px;
+  right:-15px;
+  color:#fff;  
+  font-size: 25px;
+  background: #000;
+  width: 30px;
+  height: 30px;
+  line-height: 27px;
+  text-align: center;
+  border-radius: 50px;
+}
+.box-close:hover {
+  cursor: pointer;
+}
+@media screen and (max-width: 767px) {
+  /*#exitpopup, #exitpopup_bg {
+  display:none !important;
+}*/
+
+}

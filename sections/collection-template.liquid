@@ -1,0 +1,296 @@
+{% assign limit = section.settings.rows %}
+
+{% paginate collection.products by limit %}
+
+{% include 'breadcrumb' %}
+
+{% assign has_sidebar = false %}
+{% if collection.all_tags.size > 0 %}
+  {% assign has_sidebar = true %}
+{% endif %}
+
+<div class="grid grid-border">
+
+  <div class="grid-item">
+
+    {% comment %}
+      Different markup if description is set
+    {% endcomment %}
+    {% if collection.description != blank %}
+      <header class="section-header">
+        <h1 class="section-header--title h1">{{ collection.title }}</h1>
+        <div class="rte rte--header">
+          {{ collection.description }}
+        </div>
+      </header>
+      <hr{% if has_sidebar %} class="hr"{% endif %}>
+      <div class="section-header sortbyheader">
+        <div class="section-header--right">
+          {% include 'collection-sorting' %}
+          {% include 'collection-views' %}
+          {% include 'toggle-filters' %}
+        </div>
+      </div>
+    {% else %}
+    <header class="section-header">
+      <h1 class="section-header--title section-header--left h1">{{ collection.title }}</h1>
+      <div class="section-header--right">
+        {% include 'collection-sorting' %}
+        {% include 'collection-views' %}
+        {% include 'toggle-filters' %}
+      </div>
+    </header>
+    {% endif %}
+    
+    {% if has_sidebar %}
+    <div class="filters">
+      {% include 'collection-sidebar' %}
+    </div>
+    {% endif %}
+
+    <div class="grid-uniform {% if section.settings.product_caption == "2" %} cont-products-2  {% endif %}">
+    {% case section.settings.grid %}
+      {% when '2' %}
+        {%- assign grid_item_width = 'medium--one-half large--one-half' -%}
+        {%- assign image_size = '560x' -%}
+      {% when '3' %}
+        {%- assign grid_item_width = 'small--one-half medium--one-third large--one-third' -%}
+         {%- assign image_size = '354x' -%}
+      {% when '4' %}
+        {%- assign grid_item_width = 'small--one-half medium--one-quarter large--one-quarter' -%}
+        {%- assign image_size = '258x' -%}
+      {% when '5' %}
+        {%- assign grid_item_width = 'small--one-half medium--one-fifth large--one-fifth' -%}
+        {%- assign image_size = '201x' -%}        
+      {% endcase %}
+
+      {% for product in collection.products %}
+        {% comment %}
+        {% if has_sidebar %}
+          {% assign grid_item_width = 'large--one-quarter medium--one-third small--one-half' %}
+        {% else %}
+          {% assign grid_item_width = 'large--one-fifth medium--one-third small--one-half' %}
+        {% endif %}
+        {% endcomment %}
+        {% include 'product-grid-item' with grid_item_width %}
+
+      {% else %}
+
+        <div class="grid-item">
+          <p>{{ 'collections.general.no_matches' | t }}</p>
+        </div>
+
+      {% endfor %}
+
+    </div>
+
+  </div>
+
+  {% if paginate.pages > 1 %}
+  <div class="grid-item pagination-border-top">
+    <div class="grid">
+      <div class="grid-item">
+          <div class="text-center">
+            {% include 'pagination-custom' %}
+          </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+
+{% endpaginate %}
+
+{% schema %}
+  {
+    "name": "Collection",
+    "class": "collection-template-section",
+    "settings": [
+      {
+        "type": "select",
+        "id": "product_caption",
+        "label": "Type d'affichage des vignettes",
+        "default": "1",
+        "options": [
+          {
+            "value": "1",
+            "label": "Normal"
+          },
+          {
+            "value": "2",
+            "label": "Au survol sur l'image"
+          }
+        ]
+      },
+      {
+      "type":      "range",
+      "id":        "img_border_radius",
+      "min":       0,
+      "max":        250,
+      "step":       10,
+      "unit":       "px",
+      "label":     "Degré de l'arrondi des images",
+      "default":   0
+      },
+      {
+      "type":      "range",
+      "id":        "title_truncate",
+      "min":       20,
+      "max":        100,
+      "step":       5,
+      "unit":       "px",
+      "label":     "Nombre de caractères du titre des vignettes",
+      "default":   45
+      },
+      {
+      "type": "range",
+      "id": "grid_crop_title",
+      "label": "Hauteur de la zone du titre - PC",
+      "min": 30,
+      "max": 90,
+      "step": 5,
+      "unit":       "px",
+      "default": 45                
+      },      
+      {
+      "type": "checkbox",
+      "id": "product_show_badge",
+      "label": "Afficher le badge promo",
+      "default": true
+      },
+      {
+      "type": "checkbox",
+      "id": "product_show_saved_amount2",
+      "label": "Afficher l'économie gagnée",
+      "default": true
+      },
+      {
+      "type": "checkbox",
+      "id": "product_show_compare_at_price2",
+      "label": "Afficher le prix barré",
+      "default": true
+      },
+      {
+        "type": "select",
+        "id": "btn_choice",
+        "label": "Choix du bouton",
+        "default": "1",
+        "options": [
+          {
+            "value": "0",
+            "label": "Pas de bouton"
+          },
+          {
+            "value": "1",
+            "label": "Voir le produit"
+          }                    
+        ]
+      },      
+      {
+        "type": "select",
+        "id": "grid",
+        "label": "Nombre de produits par ligne",
+        "default": "4",
+        "options": [
+          {
+            "value": "2",
+            "label": "2"
+          },
+          {
+            "value": "3",
+            "label": "3"
+          },
+          {
+            "value": "4",
+            "label": "4"
+          },
+          {
+            "value": "5",
+            "label": "5"
+          } 
+        ]
+      },
+      {
+        "type": "select",
+        "id": "rows",
+        "label": "Nombre de produits par page",
+        "default": "6",
+        "options": [
+          {
+            "value": "3",
+            "label": "3"
+          },
+          {
+            "value": "4",
+            "label": "4"
+          },
+          {
+            "value": "5",
+            "label": "5"
+          },
+          {
+            "value": "6",
+            "label": "6"
+          },
+          {
+            "value": "7",
+            "label": "7"
+          },
+          {
+            "value": "8",
+            "label": "8"
+          },
+          {
+            "value": "9",
+            "label": "9"
+          },
+          {
+            "value": "10",
+            "label": "10"
+          },
+          {
+            "value": "12",
+            "label": "12"
+          },
+          {
+            "value": "15",
+            "label": "15"
+          },
+          {
+            "value": "18",
+            "label": "18"
+          },
+          {
+            "value": "20",
+            "label": "20"
+          },
+          {
+            "value": "24",
+            "label": "24"
+          }
+        ]
+      },
+      {
+        "type": "radio",
+        "id": "collection_sidebar_filters",
+        "label": "Filtrer les produits",
+        "options": [
+          {
+            "value": "tags",
+            "label": "Par tag"
+          },
+          {
+            "value": "groups",
+            "label": "Par groupe"
+          },
+          {
+            "value": "none",
+            "label": "Pas de filtres"
+          }
+        ]
+        }
+      
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,84 @@
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" media="screen">
+<div class="custom-content">
+
+  <div class="container-testimonial">
+    <h2><center>{{ section.settings.testimonials_title }}</center></h2>
+    <br>
+
+    <div class="tcb-simple-carousel">
+      <div id="myCarousel" class="carousel slide">
+
+        <!-- Indicators --> 
+        <div class="carousel-inner"> 
+          {% for block in section.blocks %}
+          <div class="item">
+            <blockquote>
+              <p class="temoignage">{{ block.settings.content }}</p>
+              <small><i class="auteur">{{ block.settings.title | escape }}</i></small>  	
+            </blockquote>   
+          </div> 	
+          {% endfor %}     
+        </div>    
+      </div>
+      <div class="carousel-controls2">
+        <a class="carousel-control2 left" href="#myCarousel" data-slide="prev"><span class="fa fa-angle-left"></span></a>
+        <a class="carousel-control2 right" href="#myCarousel" data-slide="next"><span class="fa fa-angle-right"></span></a>
+      </div> 
+    </div>
+  </div>
+</div> 
+
+{% schema %}
+  {
+    "name": "Témoignages",
+    "class": "testimonials", 
+    "settings": [
+       {
+        "type": "text",
+        "id": "testimonials_title",
+        "label": "Titre section témoignage",
+        "default": "Témoignages"
+      }
+       
+      
+    ],
+    "max_blocks": 9,
+    "blocks": [
+      {
+        "type": "text",
+        "name": "Text",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Auteur",
+            "default": "Nom du client et ville"
+          },
+          {
+            "type": "richtext",
+	          "id": "content",
+	          "label": "Témoignage",
+	          "default": "<p>Témoignage du client</p>"
+	        }
+	      ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Témoignage",
+        "category": "Text",
+        "blocks": [
+          {
+            "type": "text"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}
+
+
+
