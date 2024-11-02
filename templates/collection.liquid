@@ -1,0 +1,16 @@
+{% comment %}
+  The contents of the collection.liquid template can be found in /sections/collection-template.liquid
+{% endcomment %}
+
+{% if collection.sort_by == 'best-selling' %}
+{% include 'breadcrumb' %}
+
+<div class="grid">
+  <div class="grid-item large--two-thirds push--large--one-sixth text-center">
+    <h1>Tu n'as rien a faire ici !</h1>    
+    <p><strong>Tu es surement en manque d'inspiration mais je te conseille de trouver tes articles par toi même ! tu verras que ta réussite n'en sera que plus belle !</strong></p>
+  </div>
+</div>
+{% else %}
+{% section 'collection-template' %}
+{% endif %}
